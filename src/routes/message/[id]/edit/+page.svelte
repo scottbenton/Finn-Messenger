@@ -26,7 +26,6 @@
 			.catch((e) => {
 				console.error(e);
 			});
-		console.log('Saving content:', recepientName, content);
 	}
 	function handleDelete() {
 		deleteMessage(message.id).then(() => {

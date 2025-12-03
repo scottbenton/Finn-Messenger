@@ -12,8 +12,13 @@ export function createMessage(content: string, receiverName: string): Promise<Me
 			return;
 		}
 
+		let fixedContent = content;
+		if (fixedContent.endsWith('<p></p>')) {
+			fixedContent = fixedContent.slice(0, -7);
+		}
+
 		addDoc(collection(firestore, 'messages'), {
-			content,
+			content: fixedContent,
 			receiverName,
 			viewsByUserOtherThanSender: 0,
 			senderId: userId,
@@ -22,7 +27,7 @@ export function createMessage(content: string, receiverName: string): Promise<Me
 			.then((doc) => {
 				resolve({
 					id: doc.id,
-					content,
+					content: fixedContent,
 					receiverName,
 					viewsByUserOtherThanSender: 0,
 					senderId: userId,

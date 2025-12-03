@@ -22,7 +22,6 @@
 			.catch((e) => {
 				console.error(e);
 			});
-		console.log('Saving content:', recepientName, content);
 	}
 </script>
 

@@ -2,6 +2,7 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { Editor } from '@tiptap/core';
 	import { StarterKit } from '@tiptap/starter-kit';
+	import { TrailingNode } from '@tiptap/extensions';
 
 	interface Props {
 		content: string;
@@ -15,7 +16,12 @@
 	onMount(() => {
 		editorState.editor = new Editor({
 			element: element,
-			extensions: [StarterKit],
+			extensions: [
+				StarterKit,
+				TrailingNode.configure({
+					notAfter: ['paragraph', 'heading']
+				})
+			],
 			editable: false,
 			content: content,
 			editorProps: {
