@@ -15,13 +15,10 @@ export function updateMessage(
 			return;
 		}
 
-		console.debug(content);
 		let fixedContent = content;
 		if (fixedContent.endsWith('<p></p>')) {
 			fixedContent = fixedContent.slice(0, -7);
 		}
-
-		console.debug(fixedContent);
 
 		updateDoc(doc(firestore, 'messages', messageId), {
 			content: fixedContent,
