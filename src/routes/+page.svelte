@@ -32,6 +32,7 @@
 			{#each messages as message (message.id)}
 				<div class="border-t border-stone-300 px-4 py-4">
 					<p>Message sent to {message.receiverName} on {message.sentOn.toLocaleString()}</p>
+					<p class="text-stone-600">{message.viewsByUserOtherThanSender} views</p>
 					<div class="mt-2 flex items-center gap-4">
 						<Button variant="text" href={`/message/${message.id}`}>View</Button>
 						<Button variant="text" href={`/message/${message.id}/edit`}>Edit</Button>
