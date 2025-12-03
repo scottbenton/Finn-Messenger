@@ -1,0 +1,14 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+@plugin '@iconify/tailwind4';
+
+@theme {
+	--font-display: 'Playfair Display Variable', cursive;
+	--font-body: 'Lora Variable', sans-serif;
+}
+
+body {
+	min-height: 100lvh;
+	@apply bg-stone-100 font-body;
+}
