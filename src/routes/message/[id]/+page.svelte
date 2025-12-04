@@ -14,7 +14,7 @@
 
 	const uid = (getContext('auth') as AuthState).user?.uid;
 	onMount(() => {
-		if (uid !== message.senderId) {
+		if (message && uid !== message.senderId) {
 			updateReadCount(message.id).catch(() => {});
 		}
 	});
@@ -29,7 +29,8 @@
 <svelte:head>
 	<title>A message for you</title>
 </svelte:head>
-<div class="relative">
+
+{#if message}
 	{#if isHidden}
 		<Card
 			out={(node) => fly(node, { y: -transitionY, duration: 750, easing: cubicOut })}
@@ -52,4 +53,8 @@
 			</div>
 		</Card>
 	{/if}
-</div>
+{:else}
+	<Card class="p-6">
+		<h1 class="py-2 font-display text-4xl">Failed to load message</h1>
+	</Card>
+{/if}

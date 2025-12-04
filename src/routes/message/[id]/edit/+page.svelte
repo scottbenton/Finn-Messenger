@@ -13,10 +13,9 @@
 	const { data }: PageProps = $props();
 	const message = data.message;
 
-	let recepientName = $state<string>(message.receiverName);
-
+	let recepientName = $state<string>(message?.receiverName ?? '');
 	function handleSave() {
-		if (!editorInstance) return;
+		if (!editorInstance || !message) return;
 		const content = editorInstance.getText();
 		updateMessage(message.id, content, recepientName)
 			.then((message) => {
@@ -28,19 +27,26 @@
 			});
 	}
 	function handleDelete() {
+		if (!message) return;
 		deleteMessage(message.id).then(() => {
 			goto(resolve('/')).catch(() => {});
 		});
 	}
 </script>
 
-<Card class="gap-6 p-6">
-	<h1 class="font-display text-3xl">Create a new message</h1>
-	<TextInput bind:value={recepientName} label="Recipient Name" />
-	<RTE bind:this={editorInstance} content={message.content} />
-	<div class="flex items-center justify-end gap-2">
-		<Button href="/" variant="secondary">Cancel</Button>
-		<Button onClick={handleDelete} variant="secondary">Delete</Button>
-		<Button onClick={handleSave}>Save</Button>
-	</div>
-</Card>
+{#if message}
+	<Card class="gap-6 p-6">
+		<h1 class="font-display text-3xl">Edit your message</h1>
+		<TextInput bind:value={recepientName} label="Recipient Name" />
+		<RTE bind:this={editorInstance} content={message.content} />
+		<div class="flex items-center justify-end gap-2">
+			<Button href="/" variant="secondary">Cancel</Button>
+			<Button onClick={handleDelete} variant="secondary">Delete</Button>
+			<Button onClick={handleSave}>Save</Button>
+		</div>
+	</Card>
+{:else}
+	<Card class="gap-6 p-6">
+		<h1 class="font-display text-3xl">Failed to load message</h1>
+	</Card>
+{/if}
