@@ -2,7 +2,7 @@
 	import { loginWithGoogle, logout, type AuthState } from '$lib/auth.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import Card from '$lib/components/Card.svelte';
-	import { getContext, onMount } from 'svelte';
+	import { getContext } from 'svelte';
 	import { getUsersMessages } from '$lib/api';
 	import type { MessageDTO } from '$lib/api';
 
@@ -10,10 +10,14 @@
 
 	const authState = getContext('auth') as AuthState;
 
-	onMount(() => {
-		getUsersMessages().then((msgs) => {
-			messages = msgs;
-		});
+	$effect(() => {
+		if (authState.user !== null) {
+			getUsersMessages().then((msgs) => {
+				messages = msgs;
+			});
+		} else {
+			messages = [];
+		}
 	});
 
 	function copyLinkToClipboard(id: string) {
