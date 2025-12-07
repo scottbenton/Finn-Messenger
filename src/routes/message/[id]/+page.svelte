@@ -63,7 +63,7 @@
 	{:else if isOutroed}
 		<Card in={(node) => fly(node, { y: transitionY, duration: 500, delay: 750, easing: cubicOut })}>
 			<div class="flex flex-col items-start justify-center gap-8 p-6 pb-10">
-				<TextDivider className="text-yellow-600 max-w-sm mx-auto" />
+				<TextDivider className="text-yellow-600 max-w-sm w-full h-auto mx-auto" />
 				<RTEViewer content={message.content} />
 			</div>
 		</Card>
