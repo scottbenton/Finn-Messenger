@@ -25,7 +25,6 @@ export function updateMessage(
 			receiverName
 		})
 			.then(() => {
-				console.debug('UPDATED');
 				resolve();
 			})
 			.catch((e) => {

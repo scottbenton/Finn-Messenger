@@ -19,6 +19,6 @@ export async function getUsersMessages(): Promise<MessageDTO[]> {
 	);
 
 	const messages = docs.docs.map((doc) => convertToDTO(doc.id, doc.data()));
-	console.debug(messages);
+
 	return messages;
 }

@@ -13,14 +13,12 @@
 	const authState = createAuthState();
 	setContext('auth', authState);
 
-	console.debug('SUBSCRIBING TO AUTH STATE');
 	const unsubscribeFromAuth: (() => void) | undefined = listenToAuthState((state) => {
 		authState.loading = state.loading;
 		authState.user = state.user;
 	});
 
 	onDestroy(() => {
-		console.debug('UNSUBSCRIBING');
 		unsubscribeFromAuth?.();
 	});
 </script>

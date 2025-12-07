@@ -1,19 +1,35 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
-	import { deleteMessage, updateMessage } from '$lib/api';
+	import { deleteMessage, readMessage, updateMessage, type MessageDTO } from '$lib/api';
 	import Button from '$lib/components/Button.svelte';
 	import Card from '$lib/components/Card.svelte';
 	import RTE from '$lib/components/RTE.svelte';
 	import TextInput from '$lib/components/TextInput.svelte';
+	import { onMount } from 'svelte';
 	import type { PageProps } from './$types';
 
+	const { params }: PageProps = $props();
+	const messageId = params.id;
+
+	let message = $state<MessageDTO | null>(null);
+	let loading = $state(true);
+
+	let recepientName = $state<string>('');
 	let editorInstance: ReturnType<typeof RTE>;
 
-	const { data }: PageProps = $props();
-	const message = data.message;
+	onMount(() => {
+		readMessage(messageId)
+			.then((msg) => {
+				message = msg;
+				recepientName = msg.receiverName;
+				loading = false;
+			})
+			.catch(() => {
+				loading = false;
+			});
+	});
 
-	let recepientName = $state<string>(message?.receiverName ?? '');
 	function handleSave() {
 		if (!editorInstance || !message) return;
 		const content = editorInstance.getText();
@@ -45,7 +61,7 @@
 			<Button onClick={handleSave}>Save</Button>
 		</div>
 	</Card>
-{:else}
+{:else if !loading}
 	<Card class="gap-6 p-6">
 		<h1 class="font-display text-3xl">Failed to load message</h1>
 	</Card>

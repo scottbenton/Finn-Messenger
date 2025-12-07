@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { PageProps } from './$types';
 	import FinnGif from '$lib/assets/finn_message.webp';
 	import { fly } from 'svelte/transition';
 	import Card from '$lib/components/Card.svelte';
@@ -9,14 +8,30 @@
 	import { getContext, onMount } from 'svelte';
 	import type { AuthState } from '$lib/auth.svelte';
 	import { updateReadCount } from '$lib/api/updateReadCount';
-	const { data }: PageProps = $props();
-	const message = data.message;
+	import { readMessage } from '$lib/api';
+	import type { MessageDTO } from '$lib/api';
+	import type { PageProps } from './$types';
+
+	const { params }: PageProps = $props();
+	const id = params.id;
+
+	let message = $state<MessageDTO | null>(null);
+	let loading = $state(true);
 
 	const uid = (getContext('auth') as AuthState).user?.uid;
 	onMount(() => {
-		if (message && uid !== message.senderId) {
-			updateReadCount(message.id).catch(() => {});
-		}
+		readMessage(id)
+			.then((msg) => {
+				message = msg;
+				loading = false;
+
+				if (msg && uid !== msg.senderId) {
+					updateReadCount(msg.id).catch(() => {});
+				}
+			})
+			.catch(() => {
+				loading = false;
+			});
 	});
 
 	// The message is hidden at first, lets add a state for that
@@ -53,7 +68,7 @@
 			</div>
 		</Card>
 	{/if}
-{:else}
+{:else if !loading}
 	<Card class="p-6">
 		<h1 class="py-2 font-display text-4xl">Failed to load message</h1>
 	</Card>
